@@ -1,31 +1,24 @@
 const asyncHandler = require("express-async-handler");
-const Application = require("../modules/application.modules.js");
-const cloudinary = require("../utility/cloudinary.js");
+const applicationService = require("../services/exmail.services");
 
-// POST /api/applications/:jobId
+// @route   POST /api/applications/:jobId
+// @access  Public
 exports.applyToJob = asyncHandler(async (req, res) => {
   const { name, email } = req.body;
   const { jobId } = req.params;
 
-  // Validate inputs
+  // Basic validation
   if (!name || !email || !req.files || !req.files.resume) {
     return res.status(400).json({ message: "Name, email, and resume are required." });
   }
 
   const resumeFile = req.files.resume;
 
-  // Upload resume to Cloudinary
-  const result = await cloudinary.uploader.upload(resumeFile.tempFilePath, {
-    folder: "resumes",
-    resource_type: "raw",
-  });
-
-  // Create application record
-  const application = await Application.create({
-    job: jobId,
+  const application = await applicationService.applyToJob({
     name,
     email,
-    resume: result.secure_url,
+    resumeFile,
+    jobId,
   });
 
   res.status(201).json({
