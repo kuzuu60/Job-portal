@@ -1,5 +1,6 @@
+// ❌ Controllers should only handle HTTP stuff: req, res, status codes, etc.
 const asyncHandler = require("express-async-handler");
-const applicationService = require("../services/exmail.services");
+const applicationService = require("../services/application.services");
 
 // @route   POST /api/applications/:jobId
 // @access  Public

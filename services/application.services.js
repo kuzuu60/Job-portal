@@ -1,5 +1,7 @@
 //logic shii here (db  queries related)
 //in this eg: application.controller shoudl be here
+// ✅ All database logic, file uploads, external API calls, and non-trivial processing go into services/
+// ❌ Controllers should only handle HTTP stuff: req, res, status codes, etc.
 
 const Application = require("../modules/application.modules.js");
 const cloudinary = require("../utility/cloudinary.js");
