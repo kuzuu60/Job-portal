@@ -1,5 +1,6 @@
 const Post = require("../modules/post.modules");
-
+const {users} = require("../db/schema")
+const {db} = require("../db/client")
 // Create a job post
 const createJobPost = async (data) => {
   return await Post.create(data);
@@ -7,7 +8,10 @@ const createJobPost = async (data) => {
 
 // Get all job posts
 const getAllJobs = async () => {
-  return await Post.find();
+  return await db.insert(users).values([{
+    name:"",
+    password
+  }])
 };
 
 // Get a job by ID

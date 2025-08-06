@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const postService = require("../services/posts.services");
 
+
 const createJob = asyncHandler(async (req, res) => {
   const {
     job_title,
