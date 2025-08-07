@@ -1,6 +1,6 @@
 // ❌ Controllers should only handle HTTP stuff: req, res, status codes, etc.
-const asyncHandler = require("express-async-handler");
-const applicationService = require("../services/application.services");
+import asyncHandler from "express-async-handler";
+import applicationService from "../services/application.services";
 
 // @route   POST /api/applications/:jobId
 // @access  Public
