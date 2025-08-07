@@ -1,5 +1,5 @@
-const { db, pool } = require("./client");
-const { users } = require("./schema");
+import { db, pool } from "./client.js";
+import { users } from "./schema.js";
 
 async function seedUsers() {
   try {

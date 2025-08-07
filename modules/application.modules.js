@@ -1,28 +1,26 @@
-const mongoose = require("mongoose");
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool } from "pg";
+import { applications } from "./application.table.js";  
 
-const applicationSchema = new mongoose.Schema(
-  {
-    job: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-      required: true,
-    },
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    resume: {
-      type: String, // Cloudinary URL
-      required: true,
-    },
-  },
-  { timestamps: true }
-);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+const db = drizzle(pool);
 
-const Application = mongoose.model("Application", applicationSchema);
+export async function createApplication({ job_id, name, email, resume }) {
+  const [application] = await db
+    .insert(applications)
+    .values({ job_id, name, email, resume })
+    .returning();
+  return application;
+}
 
-module.exports = Application;
+export async function findApplicationById(id) {
+  const application = await db
+    .select()
+    .from(applications)
+    .where(applications.id.eq(id));
+  return application;
+}
+
+export { applications };

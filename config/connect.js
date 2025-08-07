@@ -1,18 +1,19 @@
-const mongoose = require("mongoose");
+// config/connect.js
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
+import * as schema from "../db/schema.js"; // adjust the path if needed
 
-const connectDB = async () => {
-  const mongoUrl = process.env.MONGODB_URI || "";
+export const connectDB = async () => {
+  const postgresUrl = process.env.DATABASE_URL || "postgres://postgres:database123@localhost:5432/postgres";
 
   try {
-    await mongoose.connect(mongoUrl, {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
-    });
-    console.log("successfully connected");
+    const pool = new Pool({ connectionString: postgresUrl });
+    const db = drizzle(pool, { schema });
+
+    console.log("✅ PostgreSQL connected successfully");
+    return { db, pool };
   } catch (error) {
-    console.log("unable to connect with mongodb");
+    console.error("❌ Failed to connect to PostgreSQL:", error);
     process.exit(1);
   }
 };
-
-module.exports = connectDB;
