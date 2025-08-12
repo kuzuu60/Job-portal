@@ -4,19 +4,18 @@
 // ❌ Controllers should only handle HTTP stuff: req, res, status codes, etc.
 
 // application.service.js
-import Application from "../modules/application.modules.js";
+import { createApplication } from "../modules/application.modules.js";
 import cloudinary from "../utility/cloudinary.js";
 
 export const applyToJob = async ({ name, email, resumeFile, jobId }) => {
-  // Upload resume to Cloudinary
   const result = await cloudinary.uploader.upload(resumeFile.tempFilePath, {
     folder: "resumes",
     resource_type: "raw",
   });
 
-  // Create and return application record
-  const application = await Application.create({
-    job: jobId,
+  // Use the correct function from application.modules.js
+  const application = await createApplication({
+    job_id: jobId,
     name,
     email,
     resume: result.secure_url,

@@ -18,4 +18,4 @@ router.route("/:id")
   .patch(updateJob)
   .delete(deleteJob);
 
-module.exports = router;
+export default router;
