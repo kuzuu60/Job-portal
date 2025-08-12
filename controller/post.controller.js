@@ -1,8 +1,7 @@
 import asyncHandler from "express-async-handler";
-import postService from "../services/posts.services";
+import {createJobPost} from "../services/posts.services.js"
 
-
-const createJob = asyncHandler(async (req, res) => {
+export const createJob = asyncHandler(async (req, res) => {
   const {
     job_title,
     job_description,
@@ -33,50 +32,42 @@ const createJob = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Please provide all required fields" });
   }
 
-  const post = await postService.createJobPost(req.body);
+  const data = await createJobPost(req.body)
 
   res.status(201).json({
     message: "Job post created successfully",
-    post,
+    data,
   });
 });
 
-const getJobs = asyncHandler(async (req, res) => {
-  const posts = await postService.getAllJobs();
-  res.json(posts);
-});
+// const getJobs = asyncHandler(async (req, res) => {
+//   const posts = await post.getAllJobs();
+//   res.json(posts);
+// });
 
-const getJobById = asyncHandler(async (req, res) => {
-  const post = await postService.getJobById(req.params.id);
-  if (!post) {
-    res.status(404);
-    throw new Error("Job post not found");
-  }
-  res.json(post);
-});
+// const getJobById = asyncHandler(async (req, res) => {
+//   const post = await post.getJobById(req.params.id);
+//   if (!post) {
+//     res.status(404);
+//     throw new Error("Job post not found");
+//   }
+//   res.json(post);
+// });
 
-const updateJob = asyncHandler(async (req, res) => {
-  const post = await postService.updateJobById(req.params.id, req.body);
-  if (!post) {
-    res.status(404);
-    throw new Error("Job post not found");
-  }
-  res.json(post);
-});
+// const updateJob = asyncHandler(async (req, res) => {
+//   const post = await post.updateJobById(req.params.id, req.body);
+//   if (!post) {
+//     res.status(404);
+//     throw new Error("Job post not found");
+//   }
+//   res.json(post);
+// });
 
-const deleteJob = asyncHandler(async (req, res) => {
-  const post = await postService.deleteJobById(req.params.id);
-  if (!post) {
-    res.status(404);
-    throw new Error("Job post not found");
-  }
-  res.json({ message: "Job post deleted successfully" });
-});
-
-module.exports = {
-  createJob,
-  getJobs,
-  getJobById,
-  updateJob,
-  deleteJob,
-};
+// const deleteJob = asyncHandler(async (req, res) => {
+//   const post = await post.deleteJobById(req.params.id);
+//   if (!post) {
+//     res.status(404);
+//     throw new Error("Job post not found");
+//   }
+//   res.json({ message: "Job post deleted successfully" });
+// });
