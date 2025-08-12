@@ -1,6 +1,6 @@
 // ❌ Controllers should only handle HTTP stuff: req, res, status codes, etc.
 import asyncHandler from "express-async-handler";
-import applicationService from "../services/application.services";
+import applicationService from "../services/application.services.js";
 
 // @route   POST /api/applications/:jobId
 // @access  Public
@@ -15,7 +15,7 @@ exports.applyToJob = asyncHandler(async (req, res) => {
 
   const resumeFile = req.files.resume;
 
-  const application = await applicationService.applyToJob({
+  const application = await application.services.applyToJob({
     name,
     email,
     resumeFile,

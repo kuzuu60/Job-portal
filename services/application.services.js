@@ -3,10 +3,11 @@
 // ✅ All database logic, file uploads, external API calls, and non-trivial processing go into services/
 // ❌ Controllers should only handle HTTP stuff: req, res, status codes, etc.
 
-const Application = require("../modules/application.modules.js");
-const cloudinary = require("../utility/cloudinary.js");
+// application.service.js
+import Application from "../modules/application.modules.js";
+import cloudinary from "../utility/cloudinary.js";
 
-const applyToJob = async ({ name, email, resumeFile, jobId }) => {
+export const applyToJob = async ({ name, email, resumeFile, jobId }) => {
   // Upload resume to Cloudinary
   const result = await cloudinary.uploader.upload(resumeFile.tempFilePath, {
     folder: "resumes",
@@ -22,8 +23,4 @@ const applyToJob = async ({ name, email, resumeFile, jobId }) => {
   });
 
   return application;
-};
-
-module.exports = {
-  applyToJob,
 };
