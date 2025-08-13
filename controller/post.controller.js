@@ -40,34 +40,41 @@ export const createJob = asyncHandler(async (req, res) => {
   });
 });
 
-// const getJobs = asyncHandler(async (req, res) => {
-//   const posts = await post.getAllJobs();
-//   res.json(posts);
-// });
+export const getAllJobs = asyncHandler(async (req, res) => {
+  const posts = await post.getAllJobs();
+  res.json(200).json({
+    message: "Jobs retrieved successfully",
+    data: posts,
+  });
+});
 
-// const getJobById = asyncHandler(async (req, res) => {
-//   const post = await post.getJobById(req.params.id);
-//   if (!post) {
-//     res.status(404);
-//     throw new Error("Job post not found");
-//   }
-//   res.json(post);
-// });
+export const getJobById = asyncHandler(async (req, res) => {
+  const post = await post.getJobById(req.params.id);
+  if (!post) {
+    res.status(404);
+    throw new Error("Job post not found");
+  }
+  res.json(200).json({
+    message:"job retrieved successfully",
+    data: post,
+  });
+});
 
-// const updateJob = asyncHandler(async (req, res) => {
-//   const post = await post.updateJobById(req.params.id, req.body);
-//   if (!post) {
-//     res.status(404);
-//     throw new Error("Job post not found");
-//   }
-//   res.json(post);
-// });
+export const updateJob = asyncHandler(async (req, res) => {
+  const post = await post.updateJobById(req.params.id, req.body);
+  if (!post) {
+    res.status(404);
+    throw new Error("Job post not found");
+  }
+  res.json(post);
+});
 
-// const deleteJob = asyncHandler(async (req, res) => {
-//   const post = await post.deleteJobById(req.params.id);
-//   if (!post) {
-//     res.status(404);
-//     throw new Error("Job post not found");
-//   }
-//   res.json({ message: "Job post deleted successfully" });
-// });
+export const deleteJob = asyncHandler(async (req, res) => {
+  const post = await post.deleteJobById(req.params.id);
+  if (!post) {
+    res.status(404);
+    throw new Error("Job post not found");
+  }
+  res.json({ message: "Job post deleted successfully" });
+});
+

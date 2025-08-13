@@ -1,37 +1,37 @@
-import { users,posts } from "../db/schema.js";
+import { users, posts } from "../db/schema.js";
 import { db } from "../db/client.js";
 import { eq } from "drizzle-orm";
 
-// Create a job post (MongoDB)
 export const createJobPost = async (data) => {
-  return await db.insert(posts).values[data]
+  return await db.insert(posts).values(data).returning();
 };
 
-// Get all job posts (Postgres example here, probably needs adjusting)
 export const getAllJobs = async () => {
-  return await db.insert(users).values([
-    {
-      name: "",
-      password // ⚠ This is undefined right now — you probably want to pass a real value
-    }
-  ]);
+  return await db.select().from(posts);
 };
 
-// Get a job by ID (MongoDB)
 export const getJobById = async (id) => {
-  return await db.select().from(posts).where(eq(posts.id,id))
+  const result = await db
+    .select()
+    .from(posts)
+    .where(eq(posts.id, id))
+    .limit(1);
+
+  return result[0] || null; // Return single object or null
 };
 
-// Update job by ID (MongoDB)
 export const updateJobById = async (id, data) => {
-
-  return await db.update(posts).set(data).where(eq(posts.id,id))
+  return await db
+    .update(posts)
+    .set(data)
+    .where(eq(posts.id, id))
+    .returning();
 };
 
-// Delete job by ID (MongoDB)
-// export const deleteJobById = async (id) => {
-//   const post = await Post.findById(id);
-//   if (!post) return null;
-//   await post.deleteOne();
-//   return post;
-// };
+
+export const deleteJobById = async (id) => {
+  return await db
+    .delete(posts)
+    .where(eq(posts.id, id))
+    .returning();
+};

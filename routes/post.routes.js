@@ -1,8 +1,8 @@
 import express from "express";
 import {
   createJob,
-  // getJobs,
-  // getJobById,
+  getAllJobs,
+  getJobById,
   // updateJob,
   // deleteJob,
 } from "../controller/post.controller.js"
@@ -10,11 +10,11 @@ import {
 const router = express.Router();
 
 router.route("/")
-  // .get(getJobs)
+  .get(getAllJobs)
   .post(createJob);
 
-// router.route("/:id")
-//   .get(getJobById)
+router.route("/:id")
+  .get(getJobById)
 //   .patch(updateJob)
 //   .delete(deleteJob);
 
