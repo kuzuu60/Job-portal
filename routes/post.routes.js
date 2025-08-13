@@ -3,8 +3,8 @@ import {
   createJob,
   getAllJobs,
   getJobById,
-  // updateJob,
-  // deleteJob,
+  updateJob,
+  deleteJob,
 } from "../controller/post.controller.js"
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.route("/")
 
 router.route("/:id")
   .get(getJobById)
-//   .patch(updateJob)
-//   .delete(deleteJob);
+  .patch(updateJob)
+  .delete(deleteJob);
 
 export default router;
