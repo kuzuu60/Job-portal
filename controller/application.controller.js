@@ -20,6 +20,6 @@ export const applyToJob = asyncHandler(async (req, res) => {
 
   res.status(201).json({
     message: "Application submitted successfully.",
-    applicationId: application._id,
+    applicationId: application.id,
   });
 });

@@ -3,7 +3,9 @@
 // ✅ All database logic, file uploads, external API calls, and non-trivial processing go into services/
 // ❌ Controllers should only handle HTTP stuff: req, res, status codes, etc.
 
-import { createApplication } from "../modules/application.modules.js";
+// import { createApplication } from "../modules/application.modules.js";
+import { db } from "../db/client.js";
+import { applications } from "../db/schema.js"; 
 import cloudinary from "../utility/cloudinary.js";
 
 export const applyToJob = async ({ name, email, resumeFile, jobId }) => {
@@ -12,7 +14,9 @@ export const applyToJob = async ({ name, email, resumeFile, jobId }) => {
     resource_type: "raw",
   });
 
-  const application = await createApplication({
+const application = await db
+.insert(applications)
+.values({
     job_id: jobId,
     name,
     email,
@@ -20,4 +24,4 @@ export const applyToJob = async ({ name, email, resumeFile, jobId }) => {
   });
 
   return application;
-};
+ };

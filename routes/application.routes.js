@@ -1,4 +1,3 @@
-// application.routes.js
 import express from "express";
 import { applyToJob } from "../controller/application.controller.js";
 
