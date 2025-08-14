@@ -1,4 +1,4 @@
-import { users, posts } from "../db/schema.js";
+import { posts } from "../db/schema.js";
 import { db } from "../db/client.js";
 import { eq } from "drizzle-orm";
 
