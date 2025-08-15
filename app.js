@@ -3,29 +3,43 @@ import dotenv from "dotenv";
 
 import postRoutes from "./routes/post.routes.js";
 import applicationRoutes from "./routes/application.routes.js";
-// import { users } from "./db/schema.js"; // your Drizzle users table
+import { pool } from "./db/client.js";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url} hit`);
+  next();
+});
+
+app.get("/test", (req, res) => {
+  console.log("Test route hit");
+  res.json({ message: "Server works!" });
+});
+
+
 
 app.use("/api/applications", applicationRoutes);
 app.use("/api/posts", postRoutes);
 
-// Example users endpoint (PostgreSQL with Drizzle)
-// app.post("/users", async (req, res) => {
-//   try {
-//     const { name, email } = req.body;
-//     const result = await db.insert(users).values({ name, email }).returning();
-//     res.status(201).json(result[0]);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Something went wrong" });
-//   }
-// });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server listening on port ${process.env.PORT}`);
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, async () => {
+  try {
+    // Simple query to test DB connection
+    await pool.query("SELECT NOW()");
+    console.log(" Connected to PostgreSQL");
+  } catch (error) {
+    console.error("❌ Database connection failed:", error.message);
+  }
+  console.log(` Server listening on port ${PORT}`);
 });
+
+
+// app.listen(process.env.PORT, () => {
+//   console.log(`Server listening on port ${process.env.PORT}`);
+// });
