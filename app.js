@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
+import fileUpload from "express-fileupload";
+
 
 import postRoutes from "./routes/post.routes.js";
 import applicationRoutes from "./routes/application.routes.js";
@@ -7,18 +9,22 @@ import { pool } from "./db/client.js";
 
 dotenv.config();
 
-const app = express();
-app.use(express.json());
+const app = express();  
+app.use(express.urlencoded({ extended: true })); 
+app.use(fileUpload({
+  useTempFiles: true,  // <-- important for tempFilePath
+  tempFileDir: "/tmp/", // optional
+}));app.use(express.json());
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url} hit`);
   next();
 });
 
-app.get("/test", (req, res) => {
-  console.log("Test route hit");
-  res.json({ message: "Server works!" });
-});
+// app.get("/test", (req, res) => {
+//   console.log("Test route hit");
+//   res.json({ message: "Server works!" });
+// });
 
 
 
