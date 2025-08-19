@@ -14,15 +14,17 @@ export const applyToJob = async ({ name, email, resumeFile, postId }) => {
     resource_type: "raw",
   });
 
-const [application] = await db
-.insert(applications)
-.values({
+ await db
+  .insert(applications)
+  .values({
     post_id: postId,
     name,
     email,
     resume_url: String(result.secure_url),
   })
-  .returning("*");
-
-  return application;
+  
+  return {
+    success:true,
+    message:"application read"
+  };
  };

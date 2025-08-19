@@ -2,13 +2,7 @@ import { pgTable, serial, text, timestamp, varchar, integer, pgEnum, numeric } f
 
 export const JobStatus = pgEnum("job_status_enum", ["active", "inactive"]);
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  password: text("password"),
-  created_at: timestamp("created_at").defaultNow(),
-});
+
 
 export const posts = pgTable("posts", {
   id: serial("id").primaryKey(),
@@ -37,3 +31,12 @@ export const applications = pgTable("applications", {
   post_id: integer("post_id").notNull().references(() => posts.id), 
   created_at: timestamp("created_at").defaultNow(),
 });
+
+
+// export const users = pgTable("users", {
+//   id: serial("id").primaryKey(),
+//   name: text("name").notNull(),
+//   email: text("email").notNull().unique(),
+//   password: text("password"),
+//   created_at: timestamp("created_at").defaultNow(),
+// });
