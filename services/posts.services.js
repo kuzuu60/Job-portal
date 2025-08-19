@@ -1,9 +1,12 @@
 import { posts } from "../db/schema.js";
 import { db } from "../db/client.js";
 import { eq } from "drizzle-orm";
+import slugify from "slugify";
 
 export const createJobPost = async (data) => {
-  return await db.insert(posts).values(data).returning();
+  const slug = `${slugify(data.title, { lower: true, strict: true })}-${Date.now()}`;
+
+  return await db.insert(posts).values({ ...data, slug }).returning();
 };
 
 export const getAllJobs = async () => {

@@ -7,6 +7,7 @@ export const JobStatus = pgEnum("job_status_enum", ["active", "inactive"]);
 export const posts = pgTable("posts", {
   id: serial("id").primaryKey(),
   job_title: varchar("job_title", { length: 255 }).notNull(),
+  slug: varchar("title", { length:255 }).notNull(),
   job_category: varchar("job_category", { length: 100 }).notNull(),
   job_description: text("job_description").notNull(),
   job_level: varchar("job_level", { length: 50 }).notNull(), 

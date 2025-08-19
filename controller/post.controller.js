@@ -21,7 +21,7 @@ export const createJob = asyncHandler(async (req, res) => {
     professional_skill_required,
     responsibility,
     qualifications,
-    // slug,
+    slug,
   } = req.body;
 
   if (
@@ -36,8 +36,8 @@ export const createJob = asyncHandler(async (req, res) => {
     !experience_required ||
     !professional_skill_required ||
     !responsibility ||
-    !qualifications 
-    // !slug
+    !qualifications || 
+    !slug
   ) {
     return res.status(400).json({ message: "Please provide all required fields" });
   }
