@@ -6,3 +6,5 @@ const router = express.Router();
 router.post("/:postId", applyToJob);
 
 export default router;
+
+

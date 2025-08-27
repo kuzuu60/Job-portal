@@ -41,7 +41,12 @@ export const createJob = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Please provide all required fields" });
   }
 
-  const data = await createJobPost(req.body)
+  const jobData = {
+    ...req.body,
+    apply_before: new Date(apply_before),
+  };
+
+  const data = await createJobPost(jobData);
 
   res.status(201).json({
     message: "Job post created successfully",
