@@ -1,46 +1,33 @@
 import { posts } from "../db/schema.js";
 import { db } from "../db/client.js";
 import { eq } from "drizzle-orm";
-import { generateUniqueSlug } from "../utility/slug.js";
+import { generateIdBasedSlug } from "../utility/slug.js";
 
 
 export const createJobPost = async (data) => {
-  const slug = await generateUniqueSlug(data, db, posts);
-  const result = await db.insert(posts).values({ ...data, slug }).returning();
-  return result[0];
+  const inserted = await db.insert(posts).values(data).returning();
+  const newPost = inserted[0];
+
+  const slug = await generateIdBasedSlug(newPost.job_title, newPost.id);
+
+  const updated = await db
+  .update(posts)
+  .set({slug})
+  .where(eq(posts.id, newPost.id))
+  .returning();
+  
+  return updated[0];
 };
-// export const createJobPost = async (data) => {
-//   const result = await db.insert(posts).values(data).returning();
-//   return result[0] || null;
-// };
-
-// export const createJobPost = async (data) => {
-//   let baseSlug = slugify(data.job_title, { lower: true, strict: true });
-//   let slug = baseSlug;
-//   let counter = 1;
-
-//   while (true) {
-//     const existing = await db
-//       .select()
-//       .from(posts)
-//       .where(eq(posts.slug, slug))
-//       .limit(1);
-
-//     if (existing.length === 0) break; 
-//     slug = `${baseSlug}-${counter++}`; 
-//   }
-
-//   const result = await db
-//     .insert(posts)
-//     .values({ ...data, slug })
-//     .returning();
-
-//   return result[0];
-// };
 
 
-export const getAllJobs = async () => {
-  return await db.select().from(posts);
+
+export const getJobs = async ({ status } = {}) => {
+  let query = db.select().from(posts);
+
+  if(status) {
+    query = query.where(eq(posts.job_status, status));
+  }
+  return await query;
 };
 
 
@@ -49,15 +36,17 @@ export const getJobBySlug = async (slug) => {
   return result[0] || null;
 };
 
-// export const getJobBySlug = async (slug) => {
-//   const result = await db
-//     .select()
-//     .from(posts)
-//     .where(eq(posts.slug, slug))
-//     .limit(1);
+// export const getJobBySlug = async (slug, { onlyActive = false } = {}) => {
+//   let query = db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
 
+//   if (onlyActive) {
+//     query = query.where(eq(posts.status, "active"));
+//   }
+
+//   const result = await query;
 //   return result[0] || null;
 // };
+
 
 
 export const getJobById = async (id) => {
@@ -67,7 +56,7 @@ export const getJobById = async (id) => {
     .where(eq(posts.id, id))
     .limit(1);
 
-  return result[0] || null; // Return single object or null
+  return result[0] || null; 
 };
 
 export const updateJobById = async (id, data) => {

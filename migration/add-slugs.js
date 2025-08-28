@@ -1,6 +1,6 @@
 import { db } from "../db/client.js";
 import { posts as postsTable } from "../db/schema.js";
-import { generateUniqueSlug } from "../utility/slug.js";
+import { generateIdBasedSlug } from "../utility/slug.js";
 import { eq } from "drizzle-orm"; // needed for comparisons
 
 async function addSlugsToExistingPosts() {
@@ -9,7 +9,7 @@ async function addSlugsToExistingPosts() {
   for (const post of allPosts) {
     if (post.slug && post.slug !== "") continue; // skip if slug exists
 
-    const slug = await generateUniqueSlug(post, db, postsTable);
+    const slug = await generateIdBasedSlug(post, db, postsTable);
 
     await db.update(postsTable)
       .set({ slug })

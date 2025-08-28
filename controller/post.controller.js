@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import {
   createJobPost,
-  getAllJobs as getAllJobsService,
+  getJobs as getJobsService,
   getJobBySlug as getJobBySlugService,
   getJobById as getJobByIdService,
   updateJobById as updateJobByIdService,
@@ -54,13 +54,23 @@ export const createJob = asyncHandler(async (req, res) => {
   });
 });
 
-export const getAllJobs = asyncHandler(async (req, res) => {
-  const posts = await getAllJobsService ();
+export const getActiveJobs = asyncHandler(async (req, res) => {
+  const posts = await getJobsService ({status:"active"});
   res.status(200).json({
     message: "Jobs retrieved successfully",
     data: posts,
   });
 });
+
+export const getAllJobs = asyncHandler(async (req, res) => {
+  const posts = await getJobsService();
+  res.status(200).json({
+    message: "Jobs retrieved successfully",
+    data: posts,
+  });
+});
+
+
 
 export const getJobBySlug = asyncHandler(async (req, res) => {
   const post = await getJobBySlugService(req.params.slug);

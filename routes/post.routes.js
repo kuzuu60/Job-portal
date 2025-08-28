@@ -2,6 +2,7 @@ import express from "express";
 import {
   createJob,
   getAllJobs,
+  getActiveJobs,
   getJobBySlug,
   getJobById,
   updateJob,
@@ -13,6 +14,9 @@ const router = express.Router();
 router.route("/")
   .get(getAllJobs)
   .post(createJob);
+
+router.route("/frontend")
+  .get(getActiveJobs);
 
 router.route("/:id")
   .get(getJobById)
