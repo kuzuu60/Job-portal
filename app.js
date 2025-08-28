@@ -16,10 +16,10 @@ app.use(fileUpload({
   tempFileDir: "/tmp/", // optional
 }));app.use(express.json());
 
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url} hit`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`${req.method} ${req.url} hit`);
+//   next();
+// });
 
 // app.get("/test", (req, res) => {
 //   console.log("Test route hit");

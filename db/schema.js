@@ -21,7 +21,7 @@ export const posts = pgTable("posts", {
   qualifications: text("qualifications").notNull(),
   job_status: JobStatus("job_status").default("active").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
 });
 
 export const applications = pgTable("applications", {
