@@ -1,6 +1,6 @@
 import { posts } from "../db/schema.js";
 import { db } from "../db/client.js";
-import { eq } from "drizzle-orm";
+import { desc,eq } from "drizzle-orm";
 import { generateIdBasedSlug } from "../utility/slug.js";
 
 
@@ -8,7 +8,7 @@ export const createJobPost = async (data) => {
   const inserted = await db.insert(posts).values(data).returning();
   const newPost = inserted[0];
 
-  const slug = await generateIdBasedSlug(newPost.job_title, newPost.id);
+  const slug = generateIdBasedSlug(newPost.job_title, newPost.id);
 
   const updated = await db
   .update(posts)
@@ -27,7 +27,7 @@ export const getJobs = async ({ status } = {}) => {
   if(status) {
     query = query.where(eq(posts.job_status, status));
   }
-  return await query;
+  return await query.orderBy(desc(posts.created_at));
 };
 
 
@@ -62,7 +62,10 @@ export const getJobById = async (id) => {
 export const updateJobById = async (id, data) => {
   return await db
     .update(posts)
-    .set(data)
+    .set({
+      ...data,
+    updated_at: new Date()
+    })
     .where(eq(posts.id, id))
     .returning();
 };

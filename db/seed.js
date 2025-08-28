@@ -112,9 +112,3 @@ async function seed() {
 seed();
 
 
-//what do u mean i want break free from the boredom
-//i want to be more active but idk why im being so lethargic 
-//i hope better times will come 
-//else ill start doing this shi on my own with 
-//after ill im a man the feelings dont matter
-//must do what i must do regardless 
