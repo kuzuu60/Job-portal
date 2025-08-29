@@ -6,7 +6,7 @@ import {
   getJobById as getJobByIdService,
   updateJobById as updateJobByIdService,
   deleteJobById as deleteJobByIdService,
-} from "../services/posts.services.js";
+} from "../services/job.services.js";
 
 export const createJob = asyncHandler(async (req, res) => {
   const {

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import fileUpload from "express-fileupload";
 
 
-import postRoutes from "./routes/post.routes.js";
+import jobRoutes from "./routes/job.route.js";
 import applicationRoutes from "./routes/application.routes.js";
 import { pool } from "./db/client.js";
 
@@ -29,7 +29,7 @@ app.use(fileUpload({
 
 
 app.use("/api/applications", applicationRoutes);
-app.use("/api/posts", postRoutes);
+app.use("/api/jobs", jobRoutes);
 
 
 const PORT = process.env.PORT || 5000;
