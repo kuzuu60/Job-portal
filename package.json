@@ -9,12 +9,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "dev": "node --watch --trace-warnings app.js",
+    "dev": "node --watch --trace-warnings server.js",
     "migrate": "drizzle-kit push",
     "generate": "drizzle-kit generate",
     "seed": "node ./db/seed.js"
   },
   "dependencies": {
+    "@hono/node-server": "^1.19.1",
     "body-parser": "^2.2.0",
     "cloudinary": "^2.7.0",
     "compression": "^1.8.1",
@@ -25,6 +26,7 @@
     "express": "^5.1.0",
     "express-async-handler": "^1.2.0",
     "express-fileupload": "^1.5.2",
+    "hono": "^4.9.6",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
     "nodemon": "^3.1.10",

@@ -1,7 +1,9 @@
-import express from "express";
+import { Hono } from "hono";
 import { applyToJob } from "../controller/application.controller.js";
 
-const router = express.Router();
+const router = new Hono();
+
+router.get("/test", (c) => c.text("Applications route is working"));
 
 router.post("/:postId", applyToJob);
 

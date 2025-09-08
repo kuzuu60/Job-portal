@@ -1,4 +1,3 @@
-import asyncHandler from "express-async-handler";
 import {
   createJobPost,
   getJobs as getJobsService,
@@ -8,7 +7,9 @@ import {
   deleteJobById as deleteJobByIdService,
 } from "../services/job.services.js";
 
-export const createJob = asyncHandler(async (req, res) => {
+export const createJob = async (c) => {
+  const body = await c.req.json();
+
   const {
     job_title,
     job_category,
@@ -21,8 +22,8 @@ export const createJob = asyncHandler(async (req, res) => {
     experience_required,
     professional_skill_required,
     responsibility,
-    qualifications
-  } = req.body;
+    qualifications,
+  } = body;
 
   if (
     !job_title ||
@@ -36,90 +37,115 @@ export const createJob = asyncHandler(async (req, res) => {
     !experience_required ||
     !professional_skill_required ||
     !responsibility ||
-    !qualifications 
+    !qualifications
   ) {
-    return res.status(400).json({ message: "Please provide all required fields" });
+    return c.json({ message: "Please provide all required fields" }, 400);
   }
 
   const jobData = {
-    ...req.body,
+    ...body,
     apply_before: new Date(apply_before),
   };
 
   const data = await createJobPost(jobData);
 
-  res.status(201).json({
-    message: "Job post created successfully",
-    data,
-  });
-});
+  return c.json(
+    {
+      message: "Job post created successfully",
+      data,
+    },
+    201
+  );
+};
 
-export const getActiveJobs = asyncHandler(async (req, res) => {
-  const posts = await getJobsService ({status:"active"});
-  res.status(200).json({
-    message: "Jobs retrieved successfully",
-    data: posts,
-  });
-});
+export const getActiveJobs = async (c) => {
+  const posts = await getJobsService({ status: "active" });
+  return c.json(
+    {
+      message: "Jobs retrieved successfully",
+      data: posts,
+    },
+    200
+  );
+};
 
-export const getAllJobs = asyncHandler(async (req, res) => {
+export const getAllJobs = async (c) => {
   const posts = await getJobsService();
-  res.status(200).json({
-    message: "Jobs retrieved successfully",
-    data: posts,
-  });
-});
+  return c.json(
+    {
+      message: "Jobs retrieved successfully",
+      data: posts,
+    },
+    200
+  );
+};
 
+export const getJobBySlug = async (c) => {
+  const slug = c.req.param("slug");
+  const post = await getJobBySlugService(slug);
 
-
-export const getJobBySlug = asyncHandler(async (req, res) => {
-  const post = await getJobBySlugService(req.params.slug);
   if (!post) {
-    res.status(404);
-    throw new Error("Job post not found");
+    return c.json({ message: "Job post not found" }, 404);
   }
-  res.status(200).json({
-    message: "Job retrieved successfully",
-    data: post,
-  });
-});
 
-export const getJobById = asyncHandler(async (req, res) => {
-  const id = Number(req.params.id);
+  return c.json(
+    {
+      message: "Job retrieved successfully",
+      data: post,
+    },
+    200
+  );
+};
+
+export const getJobById = async (c) => {
+  const id = Number(c.req.param("id"));
   const post = await getJobByIdService(id);
+
   if (!post) {
-    res.status(404);
-    throw new Error("Job post not found");
+    return c.json({ message: "Job post not found" }, 404);
   }
-  res.status(200).json({
-    message:"job retrieved successfully",
-    data: post,
-  });
-});
 
-export const updateJob = asyncHandler(async (req, res) => {
-  const id = Number(req.params.id);
-  const post = await updateJobByIdService(id, req.body);
+  return c.json(
+    {
+      message: "Job retrieved successfully",
+      data: post,
+    },
+    200
+  );
+};
+
+export const updateJob = async (c) => {
+  const id = Number(c.req.param("id"));
+  const body = await c.req.json();
+
+  const post = await updateJobByIdService(id, body);
+
   if (post.length === 0) {
-    res.status(404);
-    throw new Error("Job post not found");
+    return c.json({ message: "Job post not found" }, 404);
   }
-  res.status(200).json({
-    message:'job updated',
-    data:post,
-  });
-});
 
-export const deleteJob = asyncHandler(async (req, res) => {
-  const id = Number(req.params.id)
+  return c.json(
+    {
+      message: "Job updated",
+      data: post,
+    },
+    200
+  );
+};
+
+export const deleteJob = async (c) => {
+  const id = Number(c.req.param("id"));
   const post = await deleteJobByIdService(id);
-  if (post.length === 0) {
-    res.status(404);
-    throw new Error("Job post not found");
-  }
-  res.status(200).json({ 
-    message: "Job post deleted successfully",
-  deleted: post[0]
- });
-});
 
+  if (post.length === 0) {
+    return c.json({ message: "Job post not found" }, 404);
+  }
+
+  return c.json(
+    {
+      message: "Job post deleted successfully",
+      deleted: post[0],
+    },
+    200
+  );
+};

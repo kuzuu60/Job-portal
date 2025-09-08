@@ -1,4 +1,4 @@
-import express from "express";
+import { Hono } from "hono";
 import {
   createJob,
   getAllJobs,
@@ -9,20 +9,17 @@ import {
   deleteJob,
 } from "../controller/job.controller.js"
 
-const router = express.Router();
+const router = new Hono();
 
-router.route("/")
-  .get(getAllJobs)
-  .post(createJob);
+router.get("/",getAllJobs);
+router.post("/",createJob);
 
-router.route("/frontend")
-  .get(getActiveJobs);
+router.get("/frontend",getActiveJobs);
 
-router.route("/:id")
-  .get(getJobById)
-  .patch(updateJob)
-  .delete(deleteJob);
+router.get("/:id",getJobById);
+router.patch("/:id",updateJob);
+router.delete("/:id",deleteJob);
 
-router.route("/slug/:slug").get(getJobBySlug);
+router.get("/slug/:slug",getJobBySlug);
 
 export default router;

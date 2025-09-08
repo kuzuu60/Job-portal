@@ -1,19 +1,21 @@
-import asyncHandler from "express-async-handler";
 import { applyToJob as serviceApplyToJob } from "../services/application.services.js";
 
-export const applyToJob = asyncHandler(async (req, res) => {
-  const { name, email } = req.body;
-  const { postId } = req.params;
+export const applyToJob = async (c) => {
+  // Get params
+  const postId = c.req.param("postId");
 
-  if (!name || !email || !req.files || !req.files.resume) {
-    return res.status(400).json({ message: "Name, email, and resume are required." });
+  // Parse form data (needed for file uploads)
+  const formData = await c.req.formData();
+  const name = formData.get("name");
+  const email = formData.get("email");
+  const resumeFile = formData.get("resume"); // File object
+
+  // Validation
+  if (!name || !email || !resumeFile) {
+    return c.json({ message: "Name, email, and resume are required." }, 400);
   }
 
-  // console.log("Resume file:", req.files.resume);
-
-
-  const resumeFile = req.files.resume;
-
+  // Call service
   const application = await serviceApplyToJob({
     name,
     email,
@@ -21,8 +23,11 @@ export const applyToJob = asyncHandler(async (req, res) => {
     postId,
   });
 
-  res.status(201).json({
-    message: "Application submitted successfully.",
-    application,
-  });
-});
+  return c.json(
+    {
+      message: "Application submitted successfully.",
+      application,
+    },
+    201
+  );
+};
