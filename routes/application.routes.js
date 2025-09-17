@@ -5,7 +5,8 @@ const router = new Hono();
 
 router.get("/test", (c) => c.text("Applications route is working"));
 
-router.post("/:postId", applyToJob);
+router.post("/:jobId", applyToJob);
+
 
 export default router;
 

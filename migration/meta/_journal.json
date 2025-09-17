@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1754470637176,
-      "tag": "0000_flimsy_loki",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1754471904231,
-      "tag": "0001_luxuriant_karnak",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1755153721542,
-      "tag": "0002_yellow_rogue",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1755165782258,
-      "tag": "0003_crazy_mongu",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1755767026958,
-      "tag": "0004_grey_angel",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1756107265846,
-      "tag": "0005_superb_demogoblin",
+      "when": 1758098701043,
+      "tag": "0000_fair_justice",
       "breakpoints": true
     }
   ]

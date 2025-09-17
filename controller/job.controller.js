@@ -59,22 +59,22 @@ export const createJob = async (c) => {
 };
 
 export const getActiveJobs = async (c) => {
-  const posts = await getJobsService({ status: "active" });
+  const jobs = await getJobsService({ status: "active" });
   return c.json(
     {
       message: "Jobs retrieved successfully",
-      data: posts,
+      data: jobs,
     },
     200
   );
 };
 
 export const getAllJobs = async (c) => {
-  const posts = await getJobsService();
+  const jobs = await getJobsService();
   return c.json(
     {
       message: "Jobs retrieved successfully",
-      data: posts,
+      data: jobs,
     },
     200
   );
@@ -82,16 +82,16 @@ export const getAllJobs = async (c) => {
 
 export const getJobBySlug = async (c) => {
   const slug = c.req.param("slug");
-  const post = await getJobBySlugService(slug);
+  const job = await getJobBySlugService(slug);
 
-  if (!post) {
+  if (!job) {
     return c.json({ message: "Job post not found" }, 404);
   }
 
   return c.json(
     {
       message: "Job retrieved successfully",
-      data: post,
+      data: job,
     },
     200
   );
@@ -99,16 +99,16 @@ export const getJobBySlug = async (c) => {
 
 export const getJobById = async (c) => {
   const id = Number(c.req.param("id"));
-  const post = await getJobByIdService(id);
+  const job = await getJobByIdService(id);
 
-  if (!post) {
+  if (!job) {
     return c.json({ message: "Job post not found" }, 404);
   }
 
   return c.json(
     {
       message: "Job retrieved successfully",
-      data: post,
+      data: job,
     },
     200
   );
@@ -118,16 +118,16 @@ export const updateJob = async (c) => {
   const id = Number(c.req.param("id"));
   const body = await c.req.json();
 
-  const post = await updateJobByIdService(id, body);
+  const job = await updateJobByIdService(id, body);
 
-  if (post.length === 0) {
+  if (job.length === 0) {
     return c.json({ message: "Job post not found" }, 404);
   }
 
   return c.json(
     {
       message: "Job updated",
-      data: post,
+      data: job,
     },
     200
   );
@@ -135,16 +135,16 @@ export const updateJob = async (c) => {
 
 export const deleteJob = async (c) => {
   const id = Number(c.req.param("id"));
-  const post = await deleteJobByIdService(id);
+  const job = await deleteJobByIdService(id);
 
-  if (post.length === 0) {
+  if (job.length === 0) {
     return c.json({ message: "Job post not found" }, 404);
   }
 
   return c.json(
     {
       message: "Job post deleted successfully",
-      deleted: post[0],
+      deleted: job[0],
     },
     200
   );

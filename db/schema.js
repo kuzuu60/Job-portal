@@ -1,10 +1,10 @@
 import { pgTable, serial, text, timestamp, varchar, integer, pgEnum, numeric } from "drizzle-orm/pg-core";
 
-export const JobStatus = pgEnum("job_status_enum", ["active", "inactive"]);
+export const JobStatusEnum = pgEnum("job_status_enum", ["active", "inactive"]);
 
 
 
-export const posts = pgTable("posts", {
+export const jobs = pgTable("jobs", {
   id: serial("id").primaryKey(),
   job_title: varchar("job_title", { length: 255 }).notNull(),
   slug: varchar("slug", { length:255 }).notNull(),
@@ -19,7 +19,7 @@ export const posts = pgTable("posts", {
   professional_skill_required: text("professional_skill_required").notNull(),
   responsibility: text("responsibility").notNull(),
   qualifications: text("qualifications").notNull(),
-  job_status: JobStatus("job_status").default("active").notNull(),
+  job_status: JobStatusEnum("job_status").default("active").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().$onUpdate(() => new Date()),
 });
@@ -29,7 +29,7 @@ export const applications = pgTable("applications", {
   name: text("name").notNull(),                             
   email: text("email").notNull(),
   resume_url: text("resume_url").notNull(),                 
-  post_id: integer("post_id").notNull().references(() => posts.id), 
+  job_id: integer("job_id").notNull().references(() => jobs.id), 
   created_at: timestamp("created_at").defaultNow(),
 });
 

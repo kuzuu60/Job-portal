@@ -5,26 +5,16 @@
 
 // import { createApplication } from "../modules/application.modules.js";
 import { db } from "../db/client.js";
-import { applications } from "../db/schema.js"; 
-import cloudinary from "../utility/cloudinary.js";
+import { applications } from "../db/schema.js";
 
-export const applyToJob = async ({ name, email, resumeFile, postId }) => {
-  const result = await cloudinary.uploader.upload(resumeFile.tempFilePath, {
-    folder: "resumes",
-    resource_type: "raw",
-  });
-
- await db
-  .insert(applications)
-  .values({
-    post_id: postId,
+export const applyToJob = async ({ jobId, name, email, resumeUrl }) => {
+  const inserted = await db.insert(applications).values({
+    job_id: jobId,
     name,
     email,
-    resume_url: String(result.secure_url),
-  })
-  
-  return {
-    success:true,
-    message:"application read"
-  };
- };
+    resume_url: resumeUrl,
+  }).returning();
+
+  return inserted[0];
+};
+
