@@ -11,7 +11,7 @@ CREATE TABLE "applications" (
 CREATE TABLE "jobs" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"job_title" varchar(255) NOT NULL,
-	"slug" varchar(255) NOT NULL,
+	"slug" varchar(255) DEFAULT 'temp-slug' NOT NULL,
 	"job_category" varchar(100) NOT NULL,
 	"job_description" text NOT NULL,
 	"job_level" varchar(50) NOT NULL,

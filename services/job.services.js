@@ -60,6 +60,8 @@ export const getJobById = async (id) => {
 };
 
 export const updateJobById = async (id, data) => {
+  console.log("🚀 ~ updateJobById ~ id:", id)
+  console.log("🚀 ~ updateJobById ~ data:", data)
   return await db
     .update(jobs)
     .set({

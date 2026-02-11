@@ -15,11 +15,12 @@ router.get("/",getAllJobs);
 router.post("/",createJob);
 
 router.get("/frontend",getActiveJobs);
+router.get("/slug/:slug",getJobBySlug);
 
 router.get("/:id",getJobById);
 router.patch("/:id",updateJob);
 router.delete("/:id",deleteJob);
-
-router.get("/slug/:slug",getJobBySlug);
+  
+router.patch("/:id/")
 
 export default router;

@@ -41,11 +41,17 @@ export const createJob = async (c) => {
   ) {
     return c.json({ message: "Please provide all required fields" }, 400);
   }
+  const applyBeforeDate = new Date(apply_before);
+  if (isNaN(applyBeforeDate.getTime())) {
+    return c.json({ message: "Invalid date provided for apply_before" }, 400);
+  }
+
 
   const jobData = {
     ...body,
-    apply_before: new Date(apply_before),
+    apply_before: applyBeforeDate,
   };
+  console.log("🚀 ~ createJob ~ jobData:", jobData)
 
   const data = await createJobPost(jobData);
 
@@ -59,15 +65,27 @@ export const createJob = async (c) => {
 };
 
 export const getActiveJobs = async (c) => {
-  const jobs = await getJobsService({ status: "active" });
-  return c.json(
-    {
-      message: "Jobs retrieved successfully",
-      data: jobs,
-    },
-    200
-  );
-};
+  try {
+    const jobs = await getJobsService({ status: "active" });
+
+    return c.json(
+      {
+        message: "Jobs retrieved successfully",
+        data: jobs,
+      },
+      200
+    );
+  } catch (error) {
+    console.error("Error fetching active jobs:", error);
+    return c.json(
+      {
+        message: "Failed to retrieve jobs",
+        error: error.message || "Unknown error",
+      },
+      500
+    );
+  }
+}
 
 export const getAllJobs = async (c) => {
   const jobs = await getJobsService();
@@ -116,7 +134,9 @@ export const getJobById = async (c) => {
 
 export const updateJob = async (c) => {
   const id = Number(c.req.param("id"));
+  console.log("🚀 ~ updateJob ~ id:", id)
   const body = await c.req.json();
+  console.log("🚀 ~ updateJob ~ body:", body)
 
   const job = await updateJobByIdService(id, body);
 

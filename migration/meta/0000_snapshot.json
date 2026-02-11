@@ -1,5 +1,5 @@
 {
-  "id": "b59a8aeb-6716-404a-b66a-8567cc76dc7f",
+  "id": "63953ad1-4155-4cb9-8b8f-c6bb4ed60856",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -88,7 +88,8 @@
           "name": "slug",
           "type": "varchar(255)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'temp-slug'"
         },
         "job_category": {
           "name": "job_category",

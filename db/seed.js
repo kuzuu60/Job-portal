@@ -55,74 +55,68 @@ async function seedJobs() {
     },
   ];
 
-  // Map to store inserted job IDs
-  const jobIdMap = {};
+
+  const jobSlugMap = {};
 
   for (const job of seedJobsData) {
-    // Check for existing job with same title + status
-    const existing = await db
-      .select()
-      .from(jobs)
-      .where(eq(jobs.job_title, job.job_title))
-      .where(eq(jobs.job_status, job.job_status));
+    // Insert job with default slug
+    const inserted = await db.insert(jobs).values(job).returning();
+    const id = inserted[0].id;
 
-    if (existing.length === 0) {
-      // Insert job without slug first
-      const inserted = await db.insert(jobs).values(data).returning();
-      const id = inserted[0].id;
+    // Generate real slug
+    const slug = generateIdBasedSlug(job.job_title, id);
 
-      // Generate slug using actual DB id
-      const slug = generateIdBasedSlug(job.job_title, id);
+    // Update slug
+    await db.update(jobs).set({ slug }).where(eq(jobs.id, id));
 
-      // Update row with slug
-      await db.update(jobs).set({ slug }).where(eq(jobs.id, id));
+    // Save mapping by job title (or anything unique you want)
+    jobSlugMap[slug] = id;
 
-      // Save ID for mapping to applications
-      jobIdMap[job.job_title + job.job_status] = id;
-
-      console.log(`✅ Inserted job with slug: ${slug}`);
-    } else {
-      console.log(`⚠️ Job already exists, skipped: ${job.job_title} (${job.job_status})`);
-      // Map existing ID as well
-      jobIdMap[job.job_title + job.job_status] = existing[0].id;
-    }
+    console.log(`✅ Job seeded: ${job.job_title} → slug: ${slug}`);
   }
 
-  return jobIdMap; // Return map for application seeding
+  return jobSlugMap;
 }
-
 // ------------------------
 // Seed Applications
 // ------------------------
-async function seedApplications(jobIdMap) {
+async function seedApplications(jobSlugMap) {
   const seedApplicationsData = [
     {
       name: "Alice Smith",
       email: "alice@example.com",
       resume_url: "https://resumes.example.com/alice.pdf",
-      job_id: jobIdMap["Frontend Developeractive"],
+      job_slug: "frontend-developer-1",
     },
     {
       name: "Bob Johnson",
       email: "bob@example.com",
       resume_url: "https://resumes.example.com/bob.pdf",
-      job_id: jobIdMap["Backend Developeractive"],
+      job_slug: "backend-developer-2",
+    },
+     {
+      name: "Charlie Davis",
+      email: "charlie@example.com",
+      resume_url: "https://resumes.example.com/charlie.pdf",
+      job_slug: "backend-developer-3",
     },
   ];
 
   for (const app of seedApplicationsData) {
-    const existing = await db
-      .select()
-      .from(applications)
-      .where(eq(applications.email, app.email))
-      .where(eq(applications.job_id, app.job_id));
-
-    if (existing.length === 0) {
-      const inserted = await db.insert(applications).values(app).returning();
-      console.log(`✅ Inserted application: ${inserted[0].name}`);
-    } else {
-      console.log(`⚠️ Application already exists, skipped: ${app.name} for job ${app.job_id}`);
+    const job_id = jobSlugMap[app.job_slug];
+    if (!job_id) {
+      console.warn(`⚠️ Skipping ${app.name}, job slug not found: ${app.job_slug}`);
+      continue;
     }
+
+    await db.insert(applications).values({
+      name: app.name,
+      email: app.email,
+      resume_url: app.resume_url,
+      job_id,
+    });
+
+    console.log(`📄 Application seeded for ${app.name} → Job slug ${app.job_slug}`);
   }
 }
 
@@ -131,8 +125,8 @@ async function seedApplications(jobIdMap) {
 // ------------------------
 async function seed() {
   try {
-    const jobIdMap = await seedJobs();       // Seed jobs first
-    await seedApplications(jobIdMap);        // Then seed applications
+    const jobSlugMap = await seedJobs();       // Seed jobs first
+    await seedApplications(jobSlugMap);        // Then seed applications
     console.log("🎉 Seeding complete!");
   } catch (err) {
     console.error("❌ Seeding failed:", err);
